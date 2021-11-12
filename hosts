@@ -1,1 +1,1 @@
-ubuntu ansible_user=vagrant ansible_password=vagrant ansible_host=127.0.0.1 ansible_port=11022
+ubuntu ansible_user=ubuntu ansible_password=ubuntu ansible_host=ec2-18-195-79-143.eu-central-1.compute.amazonaws.com ansible_port=11022
