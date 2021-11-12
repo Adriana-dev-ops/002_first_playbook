@@ -1,0 +1,71 @@
+---
+- name: First common playbook
+  hosts: 
+    - ubuntu
+
+  vars:
+    - servers:
+        - galaxy
+        - vulcan
+        - ameros
+    - bg_url: https://cdn.wallpapersafari.com/55/73/ghY4rc.jpg
+    - bg_dest_path: Pictures/bg.jpg
+
+
+  tasks:
+    - name: Install php8.0 prerequisities
+      apt:
+        name: 
+          - ca-certificates
+          - apt-transport-https
+          - software-properties-common
+        update_cache: yes
+      become: yes
+      tags:
+        - packages
+
+    - name: Add php8.0 repo
+      apt_repository: 
+        repo: ppa:ondrej/php
+      become: yes
+      tags:
+        - packages
+
+    - name: Install base staff
+      apt:
+        name:
+          - htop
+          - vim
+          - php8.0
+          - kazam
+          - filezilla
+          - bluefish
+        state: present
+        update_cache: yes
+      become: yes
+      tags:
+        - packages
+
+    - name: Download bg image
+      get_url: 
+        url: "{{ bg_url }}"
+        dest: "{{ ansible_user_dir }}/{{ bg_dest_path }}"
+      tags:
+        - background
+
+    - name: Change ubuntu background
+      shell: "gsettings set org.gnome.desktop.background picture-uri 'file://{{ ansible_user_dir }}/{{ bg_dest_path }}'"
+      tags:
+        - background
+
+    - name: Create files from servers var
+      template:
+        src: template.j2
+        dest: "/tmp/{{ item }}.txt"
+      loop: "{{ servers }}"
+      tags:
+        - template
+
+
+
+
